@@ -1,20 +1,19 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
 }
 
 android {
-    compileSdkVersion 31
-
+    namespace 'com.simform.videoimageeditor'
+    compileSdk 35
     defaultConfig {
         applicationId "com.simform.videoimageeditor"
         minSdkVersion 24
-        targetSdkVersion 31
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx...test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -23,14 +22,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    kotlinOptions {
-        jvmTarget = '11'
-    }
-    flavorDimensions "default"
 
-    androidExtensions {
-        experimental = true
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    
+    buildFeatures {
+        viewBinding true
+    }
+    
+    flavorDimensions "default"
 }
 
 final roomSchemaDir = "$projectDir/roomSchemas"
