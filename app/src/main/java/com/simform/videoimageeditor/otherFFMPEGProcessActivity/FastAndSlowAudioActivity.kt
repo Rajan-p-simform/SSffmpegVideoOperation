@@ -1,5 +1,6 @@
 package com.simform.videoimageeditor.otherFFMPEGProcessActivity
 
+import android.os.Build
 import android.view.View
 import android.widget.Toast
 import com.jaiselrahman.filepicker.model.MediaFile
@@ -27,7 +28,16 @@ class FastAndSlowAudioActivity : BaseActivity(R.layout.activity_fast_and_slow_au
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnAudioPath -> {
-                Common.selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickAudio.launch(arrayOf("audio/*"))
+                } else {
+                    Common.selectFile(
+                        this,
+                        maxSelection = 1,
+                        isImageSelection = false,
+                        isAudioSelection = true
+                    )
+                }
             }
             R.id.btnMotion -> {
                 when {
@@ -74,7 +84,12 @@ class FastAndSlowAudioActivity : BaseActivity(R.layout.activity_fast_and_slow_au
         when (requestCode) {
             Common.AUDIO_FILE_REQUEST_CODE -> {
                 if (mediaFiles != null && mediaFiles.isNotEmpty()) {
-                    binding.tvInputPathAudio.text = mediaFiles[0].path
+                    binding.tvInputPathAudio.text =
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri)
+                        } else {
+                            mediaFiles[0].path ?: ""
+                        }
                     isInputAudioSelected = true
                 } else {
                     Toast.makeText(this, getString(R.string.audio_not_selected_toast_message), Toast.LENGTH_SHORT).show()
