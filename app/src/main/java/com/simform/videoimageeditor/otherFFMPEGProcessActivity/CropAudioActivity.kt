@@ -1,6 +1,7 @@
 package com.simform.videoimageeditor.otherFFMPEGProcessActivity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
@@ -12,8 +13,10 @@ import com.simform.videoimageeditor.databinding.ActivityCropAudioBinding
 import com.simform.videoimageeditor.ikovac.timepickerwithseconds.MyTimePickerDialog
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
+import com.simform.videooperations.Common.stringForTime
 import com.simform.videooperations.FFmpegCallBack
 import com.simform.videooperations.LogMessage
+import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -40,7 +43,16 @@ class CropAudioActivity : BaseActivity(R.layout.activity_crop_audio, R.string.cr
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnAudioPath -> {
-                Common.selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickAudio.launch(arrayOf("audio/*"))
+                } else {
+                    Common.selectFile(
+                        this,
+                        maxSelection = 1,
+                        isImageSelection = false,
+                        isAudioSelection = true
+                    )
+                }
             }
             R.id.btnSelectStartTime -> {
                 if (!TextUtils.isEmpty(maxTimeString) && !TextUtils.equals(maxTimeString, getString(R.string.zero_time))) {
@@ -84,8 +96,20 @@ class CropAudioActivity : BaseActivity(R.layout.activity_crop_audio, R.string.cr
     override fun selectedFiles(mediaFiles: List<MediaFile>?, requestCode: Int) {
         if (requestCode == Common.AUDIO_FILE_REQUEST_CODE) {
             if (mediaFiles != null && mediaFiles.isNotEmpty()) {
-                binding.tvInputPath.text = mediaFiles[0].path
-                maxTimeString = Common.stringForTime(mediaFiles[0].duration)
+                binding.tvInputPath.text =
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri)
+                    } else {
+                        mediaFiles[0].path ?: ""
+                    }
+                maxTimeString =
+                    stringForTime(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.getDurationFromFile(File(binding.tvInputPath.text.toString()))
+                    } else {
+                        mediaFiles[0].duration
+                    }
+                )
                 binding.tvMaxTime.text = "Selected audio max time : $maxTimeString"
             } else {
                 Toast.makeText(this, getString(R.string.audio_not_selected_toast_message), Toast.LENGTH_SHORT).show()

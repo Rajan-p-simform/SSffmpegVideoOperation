@@ -91,6 +91,40 @@ abstract class BaseActivity(view: Int, title: Int) : AppCompatActivity(), View.O
 
     }
 
+    val pickAudio = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            // Got audio Uri, do something with it
+            val mediaFiles = listOf(MediaFile().apply {
+                setUri(uri)
+                setMediaType(MediaFile.TYPE_AUDIO)
+                setMimeType(contentResolver.getType(uri))
+                setName(uri.lastPathSegment ?: "Unknown")
+            })
+            this.mediaFiles = mediaFiles
+            (this as FileSelection).selectedFiles(mediaFiles, Common.AUDIO_FILE_REQUEST_CODE)
+        } else {
+            Toast.makeText(this, "No audio selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val pickMultipleAudio = registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+        if (uris != null) {
+            // Got audio Uri, do something with it
+            val mediaFiles = uris.map { uri ->
+                MediaFile().apply {
+                    setUri(uri)
+                    setMediaType(MediaFile.TYPE_AUDIO)
+                    setMimeType(contentResolver.getType(uri))
+                    setName(uri.lastPathSegment ?: "Unknown")
+                }
+            }
+            this.mediaFiles = mediaFiles
+            (this as FileSelection).selectedFiles(mediaFiles, Common.AUDIO_FILE_REQUEST_CODE)
+        } else {
+            Toast.makeText(this, "No audio selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Content view will be set by individual activities using view binding

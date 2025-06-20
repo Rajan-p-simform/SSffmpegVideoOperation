@@ -86,7 +86,7 @@ class ExtractImagesActivity : BaseActivity(R.layout.activity_extract_images, R.s
             }
 
             override fun success() {
-                binding.tvOutputPath.text = "Output Directory : \n${File(getExternalFilesDir(Common.OUT_PUT_DIR).toString()).absolutePath} \n\nTotal Frames Extracted: $totalFramesExtracted"
+                binding.tvOutputPath.text = "Output Directory : \n${outputPath} \n\nTotal Frames Extracted: $totalFramesExtracted"
                 processStop()
             }
 
