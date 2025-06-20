@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.OpenableColumns
 import android.text.TextUtils
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
@@ -203,7 +202,7 @@ object Common {
             }
         }
         val dest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            File(dir, File.separator + System.currentTimeMillis().div(1000L) + extension)
+            File(dir, System.currentTimeMillis().div(1000L).toString() + extension)
         } else {
             // Fallback for devices below Android 14
             File(dir.path + File.separator + OUT_PUT_DIR + System.currentTimeMillis().div(1000L) + extension)

@@ -1,6 +1,7 @@
 package com.simform.videoimageeditor.otherFFMPEGProcessActivity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.view.View
 import android.widget.Toast
 import com.jaiselrahman.filepicker.model.MediaFile
@@ -29,7 +30,16 @@ class AudiosMergeActivity : BaseActivity(R.layout.activity_audios_merge, R.strin
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnAudioPath -> {
-                Common.selectFile(this, maxSelection = 10, isImageSelection = false, isAudioSelection = true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickMultipleAudio.launch(arrayOf("audio/*"))
+                } else {
+                    Common.selectFile(
+                        this,
+                        maxSelection = 10,
+                        isImageSelection = false,
+                        isAudioSelection = true
+                    )
+                }
             }
             R.id.btnMerge -> {
                 mediaFiles?.size?.let {
@@ -50,7 +60,12 @@ class AudiosMergeActivity : BaseActivity(R.layout.activity_audios_merge, R.strin
         mediaFiles?.let {
             for (element in it) {
                 val paths = Paths()
-                paths.filePath = element.path
+                paths.filePath =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.saveFileToTempAndGetPath(this, element.uri) ?: ""
+                    } else {
+                        element.path ?: ""
+                    }
                 paths.isImageFile = true
                 pathsList.add(paths)
             }
