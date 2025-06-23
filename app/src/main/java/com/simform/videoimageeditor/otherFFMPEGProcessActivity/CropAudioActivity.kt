@@ -5,14 +5,13 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import com.ikovac.timepickerwithseconds.MyTimePickerDialog
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
+import com.simform.videoimageeditor.ikovac.timepickerwithseconds.MyTimePickerDialog
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
-import com.simform.videooperations.FFmpegQueryExtension
 import com.simform.videooperations.LogMessage
 import java.text.ParseException
 import java.text.SimpleDateFormat
