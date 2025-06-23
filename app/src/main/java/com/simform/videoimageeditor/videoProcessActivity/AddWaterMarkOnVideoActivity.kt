@@ -2,9 +2,12 @@ package com.simform.videoimageeditor.videoProcessActivity
 
 import android.annotation.SuppressLint
 import android.media.MediaMetadataRetriever
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
@@ -37,10 +40,20 @@ class AddWaterMarkOnVideoActivity : BaseActivity(R.layout.activity_add_water_mar
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnVideoPath -> {
-                selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+                } else {
+                    // Fallback for devices below Android 13
+                    Common.selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = false)
+                }
             }
             R.id.btnImagePath -> {
-                selectFile(this, maxSelection = 1, isImageSelection = true, isAudioSelection = false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                } else {
+                    // Fallback for devices below Android 13
+                    Common.selectFile(this, maxSelection = 1, isImageSelection = true, isAudioSelection = false)
+                }
             }
             R.id.btnAdd -> {
                 when {
@@ -76,7 +89,12 @@ class AddWaterMarkOnVideoActivity : BaseActivity(R.layout.activity_add_water_mar
         when (fileRequestCode) {
             Common.VIDEO_FILE_REQUEST_CODE -> {
                 if (mediaFiles != null && mediaFiles.isNotEmpty()) {
-                    binding.tvInputPathVideo.text = mediaFiles[0].path
+                    binding.tvInputPathVideo.text =
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri)
+                        } else {
+                            mediaFiles[0].path
+                        }
                     isInputVideoSelected = true
                     runAsync {
                         retriever = MediaMetadataRetriever()
@@ -91,7 +109,12 @@ class AddWaterMarkOnVideoActivity : BaseActivity(R.layout.activity_add_water_mar
             }
             Common.IMAGE_FILE_REQUEST_CODE -> {
                 if (mediaFiles != null && mediaFiles.isNotEmpty()) {
-                    binding.tvInputPathImage.text = mediaFiles[0].path
+                    binding.tvInputPathImage.text =
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri)
+                        } else {
+                            mediaFiles[0].path
+                        }
                     isWaterMarkImageSelected = true
                 } else {
                     Toast.makeText(this, getString(R.string.image_not_selected_toast_message), Toast.LENGTH_SHORT).show()

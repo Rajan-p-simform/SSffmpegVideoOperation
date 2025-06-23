@@ -2,9 +2,12 @@ package com.simform.videoimageeditor.videoProcessActivity
 
 import android.annotation.SuppressLint
 import android.media.MediaMetadataRetriever
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
@@ -13,7 +16,6 @@ import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.getFileFromAssets
 import com.simform.videooperations.FFmpegCallBack
-import com.simform.videooperations.FFmpegQueryExtension
 import com.simform.videooperations.LogMessage
 import java.util.concurrent.CompletableFuture.runAsync
 
@@ -34,7 +36,12 @@ class AddTextOnVideoActivity : BaseActivity(R.layout.activity_add_text_on_video,
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnVideoPath -> {
-                Common.selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+                } else {
+                    // Fallback for devices below Android 13
+                    Common.selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = false)
+                }
             }
             R.id.btnAdd -> {
                 with(binding) {
@@ -119,7 +126,11 @@ class AddTextOnVideoActivity : BaseActivity(R.layout.activity_add_text_on_video,
         when (requestCode) {
             Common.VIDEO_FILE_REQUEST_CODE -> {
                 if (mediaFiles != null && mediaFiles.isNotEmpty()) {
-                    binding.tvInputPathVideo.text = mediaFiles[0].path
+                    binding.tvInputPathVideo.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri)
+                    } else {
+                        mediaFiles[0].path
+                    }
                     isInputVideoSelected = true
                     runAsync {
                         retriever = MediaMetadataRetriever()
