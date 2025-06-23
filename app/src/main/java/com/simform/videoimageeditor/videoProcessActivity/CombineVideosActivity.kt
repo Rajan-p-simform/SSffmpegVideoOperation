@@ -2,8 +2,11 @@ package com.simform.videoimageeditor.videoProcessActivity
 
 import android.annotation.SuppressLint
 import android.media.MediaMetadataRetriever
+import android.os.Build
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
@@ -30,7 +33,12 @@ class CombineVideosActivity : BaseActivity(R.layout.activity_combine_videos, R.s
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnVideoPath -> {
-                Common.selectFile(this, maxSelection = 5, isImageSelection = false, isAudioSelection = false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+                } else {
+                    // Fallback for devices below Android 14
+                    Common.selectFile(this, maxSelection = 5, isImageSelection = false, isAudioSelection = false)
+                }
             }
             R.id.btnCombine -> {
                 when {
@@ -57,7 +65,13 @@ class CombineVideosActivity : BaseActivity(R.layout.activity_combine_videos, R.s
                     isVideoSelected = true
                     CompletableFuture.runAsync {
                         retriever = MediaMetadataRetriever()
-                        retriever?.setDataSource(mediaFiles[0].path)
+                        retriever?.setDataSource(
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri) ?: ""
+                            } else {
+                                mediaFiles[0].path
+                            }
+                        )
                         val bit = retriever?.frameAtTime
                         if (bit != null) {
                             width = bit.width
@@ -93,7 +107,13 @@ class CombineVideosActivity : BaseActivity(R.layout.activity_combine_videos, R.s
         mediaFiles?.let {
             for (element in it) {
                 val paths = Paths()
-                paths.filePath = element.path
+                paths.filePath =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.saveFileToTempAndGetPath(this, element.uri) ?: ""
+                    } else {
+                        element.path
+                    }
+
                 paths.isImageFile = false
                 pathsList.add(paths)
             }

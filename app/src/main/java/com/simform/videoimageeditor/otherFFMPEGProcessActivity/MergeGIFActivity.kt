@@ -1,6 +1,7 @@
 package com.simform.videoimageeditor.otherFFMPEGProcessActivity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
@@ -21,6 +22,8 @@ import com.simform.videooperations.FFmpegCallBack
 import com.simform.videooperations.LogMessage
 import com.simform.videooperations.Paths
 import java.io.File
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 
 
 class MergeGIFActivity : BaseActivity(R.layout.activity_merge_gif, R.string.merge_gif) {
@@ -38,7 +41,16 @@ class MergeGIFActivity : BaseActivity(R.layout.activity_merge_gif, R.string.merg
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnGifPath -> {
-                Common.selectFile(this, maxSelection = 2, isImageSelection = true, isAudioSelection = false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                } else {
+                    Common.selectFile(
+                        this,
+                        maxSelection = 2,
+                        isImageSelection = true,
+                        isAudioSelection = false
+                    )
+                }
             }
             R.id.btnMerge -> {
                 when {
@@ -84,7 +96,12 @@ class MergeGIFActivity : BaseActivity(R.layout.activity_merge_gif, R.string.merg
         mediaFiles?.let {
             for (element in it) {
                 val paths = Paths()
-                paths.filePath = element.path
+                paths.filePath =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.saveFileToTempAndGetPath(this, element.uri) ?: ""
+                    } else {
+                        element.path
+                    }
                 paths.isImageFile = true
                 pathsList.add(paths)
             }
@@ -145,8 +162,15 @@ class MergeGIFActivity : BaseActivity(R.layout.activity_merge_gif, R.string.merg
                     val size: Int = mediaFiles.size
                     var isGifFile = true
                     for (i in 0 until size) {
-                        if (File(mediaFiles[i].path).extension != "gif") {
-                            isGifFile = false
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            if (mediaFiles[i].mimeType != "image/gif") {
+                                isGifFile = false
+                            }
+                        } else {
+                            // For older versions, check the file extension
+                            if (File(mediaFiles[i].path).extension != "gif") {
+                                isGifFile = false
+                            }
                         }
                     }
                     if (size == 2 && isGifFile) {
