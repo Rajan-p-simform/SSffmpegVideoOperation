@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+**
+** Copyright 2008, The Android Open Source Project
+** Copyright 2013, Ivan Kovac  navratnanos@gmail.com
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<!-- Layout of time picker-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal">
+
+    <!-- Time Pickers: Hour, Minute, Second -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layoutDirection="ltr">
+
+        <!-- Hour Picker -->
+        <NumberPicker
+            android:id="@+id/hour"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <!-- Minute Picker -->
+        <NumberPicker
+            android:id="@+id/minute"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <!-- Second Picker -->
+        <NumberPicker
+            android:id="@+id/seconds"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+    </LinearLayout>
+
+    <!-- AM/PM Toggle Button -->
+    <Button
+        android:id="@+id/amPm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="43dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@android:color/primary_text_light_nodisable"
+        style="?android:attr/textAppearanceLargeInverse" />
+
+</LinearLayout>
