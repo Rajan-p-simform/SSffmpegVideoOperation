@@ -2,12 +2,15 @@
 buildscript {
     ext.kotlin_version = '1.7.0'
     repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
+        maven {
+            url 'https://groovy.jfrog.io/artifactory/libs-release/'
+        }
         google()
+        gradlePluginPortal()
+        maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.4.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0"
