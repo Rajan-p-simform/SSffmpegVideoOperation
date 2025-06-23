@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
@@ -31,7 +33,12 @@ class ImageToVideoConvertActivity : BaseActivity(R.layout.activity_image_to_vide
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnImagePath -> {
-                Common.selectFile(this, maxSelection = 1, isImageSelection = true, isAudioSelection = false)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                } else {
+                    // Fallback for devices below Android 14
+                    Common.selectFile(this, maxSelection = 1, isImageSelection = true, isAudioSelection = false)
+                }
             }
             R.id.btnConvert -> {
                 when {
@@ -55,7 +62,12 @@ class ImageToVideoConvertActivity : BaseActivity(R.layout.activity_image_to_vide
         if (requestCode == Common.IMAGE_FILE_REQUEST_CODE) {
             if (mediaFiles != null && mediaFiles.isNotEmpty()) {
                 isFileSelected = true
-                binding.tvInputPath.text = mediaFiles[0].path
+                binding.tvInputPath.text =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri)
+                    } else {
+                        mediaFiles[0].path
+                    }
             } else {
                 isFileSelected = false
                 Toast.makeText(this, getString(R.string.image_not_selected_toast_message), Toast.LENGTH_SHORT).show()
