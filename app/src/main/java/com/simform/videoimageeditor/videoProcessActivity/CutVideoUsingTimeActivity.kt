@@ -1,10 +1,13 @@
 package com.simform.videoimageeditor.videoProcessActivity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
@@ -17,6 +20,7 @@ import com.simform.videooperations.Common.VIDEO_FILE_REQUEST_CODE
 import com.simform.videooperations.Common.stringForTime
 import com.simform.videooperations.FFmpegCallBack
 import com.simform.videooperations.LogMessage
+import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -44,7 +48,13 @@ class CutVideoUsingTimeActivity : BaseActivity(R.layout.activity_cut_video_using
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnVideoPath -> {
-                Common.selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = false)
+                // check if device is 14 or plus
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickSingleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+                } else {
+                    // Fallback for devices below Android 14
+                    Common.selectFile(this, maxSelection = 1, isImageSelection = false, isAudioSelection = false)
+                }
             }
             R.id.btnSelectStartTime -> {
                 if (!TextUtils.isEmpty(maxTimeString) && !TextUtils.equals(maxTimeString, getString(R.string.zero_time))) {
@@ -88,8 +98,20 @@ class CutVideoUsingTimeActivity : BaseActivity(R.layout.activity_cut_video_using
     override fun selectedFiles(mediaFiles: List<MediaFile>?, requestCode: Int) {
         if (requestCode == VIDEO_FILE_REQUEST_CODE) {
             if (mediaFiles != null && mediaFiles.isNotEmpty()) {
-                binding.tvInputPath.text = mediaFiles[0].path
-                maxTimeString = stringForTime(mediaFiles[0].duration)
+                binding.tvInputPath.text =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    Common.saveFileToTempAndGetPath(this, mediaFiles[0].uri)
+                } else {
+                    mediaFiles[0].path
+                }
+                maxTimeString =
+                    stringForTime(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.getDurationFromFile(File(binding.tvInputPath.text.toString()))
+                    } else {
+                            mediaFiles[0].duration
+                        }
+                    )
                 binding.tvMaxTime.text = "Selected video max time : $maxTimeString"
             } else {
                 Toast.makeText(this, getString(R.string.video_not_selected_toast_message), Toast.LENGTH_SHORT).show()
