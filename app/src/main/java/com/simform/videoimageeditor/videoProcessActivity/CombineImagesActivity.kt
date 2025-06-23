@@ -1,9 +1,12 @@
 package com.simform.videoimageeditor.videoProcessActivity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
@@ -30,7 +33,16 @@ class CombineImagesActivity : BaseActivity(R.layout.activity_combine_images, R.s
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnImagePath -> {
-                Common.selectFile(this, maxSelection = 25, isImageSelection = true, isAudioSelection = false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                } else {
+                    Common.selectFile(
+                        this,
+                        maxSelection = 25,
+                        isImageSelection = true,
+                        isAudioSelection = false
+                    )
+                }
             }
             R.id.btnCombine -> {
                 when {
@@ -86,7 +98,12 @@ class CombineImagesActivity : BaseActivity(R.layout.activity_combine_images, R.s
         mediaFiles?.let {
             for (element in it) {
                 val paths = Paths()
-                paths.filePath = element.path
+                paths.filePath =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Common.saveFileToTempAndGetPath(this, element.uri) ?: ""
+                    } else {
+                        element.path
+                    }
                 paths.isImageFile = true
                 pathsList.add(paths)
             }
