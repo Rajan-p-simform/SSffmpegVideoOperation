@@ -86,9 +86,9 @@ class CombineImagesActivity : BaseActivity(R.layout.activity_combine_images, R.s
 
     private fun processStart() {
         binding.apply {
-            binding.btnImagePath.isEnabled = false
-            binding.btnCombine.isEnabled = false
-            binding.mProgressView.root.visibility = View.VISIBLE
+            btnImagePath.isEnabled = false
+            btnCombine.isEnabled = false
+            mProgressView.root.visibility = View.VISIBLE
         }
     }
 
