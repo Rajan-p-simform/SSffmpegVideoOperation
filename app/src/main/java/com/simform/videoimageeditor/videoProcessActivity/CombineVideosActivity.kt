@@ -116,6 +116,7 @@ class CombineVideosActivity : BaseActivity(R.layout.activity_combine_videos, R.s
                     }
 
                 paths.isImageFile = false
+                paths.hasAudio = hasAudio(paths.filePath)
                 pathsList.add(paths)
             }
 
@@ -143,6 +144,20 @@ class CombineVideosActivity : BaseActivity(R.layout.activity_combine_videos, R.s
                     processStop()
                 }
             })
+        }
+    }
+
+    private fun hasAudio(filePath: String): Boolean {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(filePath)
+            val hasAudio = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)
+            hasAudio == "yes"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            retriever.release()
         }
     }
 }
