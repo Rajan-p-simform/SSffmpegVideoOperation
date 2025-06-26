@@ -19,6 +19,8 @@ afterEvaluate {
 }
 
 repositories {
+    google()
+    mavenCentral()
     flatDir {
         dirs 'libs'
     }
