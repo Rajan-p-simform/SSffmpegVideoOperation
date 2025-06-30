@@ -6,6 +6,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityMergeAudioVideoBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -20,7 +21,8 @@ class MergeAudioVideoActivity : BaseActivity(R.layout.activity_merge_audio_video
     override fun initialization() {
         binding = ActivityMergeAudioVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.merge_video_and_audio)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnMp3Path.setOnClickListener(this)
         binding.btnMerge.setOnClickListener(this)

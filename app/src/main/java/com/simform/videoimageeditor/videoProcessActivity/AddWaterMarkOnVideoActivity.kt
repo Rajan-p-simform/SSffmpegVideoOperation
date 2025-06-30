@@ -12,11 +12,11 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityAddWaterMarkOnVideoBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.VIDEO
 import com.simform.videooperations.Common.getFilePath
-import com.simform.videooperations.Common.selectFile
 import com.simform.videooperations.FFmpegCallBack
 import com.simform.videooperations.LogMessage
 import java.util.concurrent.CompletableFuture.runAsync
@@ -29,7 +29,8 @@ class AddWaterMarkOnVideoActivity : BaseActivity(R.layout.activity_add_water_mar
     override fun initialization() {
         binding = ActivityAddWaterMarkOnVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.add_water_mark_on_video)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnImagePath.setOnClickListener(this)
         binding.btnAdd.setOnClickListener(this)

@@ -10,6 +10,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityRemoveAudioFromVideoBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -23,7 +24,8 @@ class RemoveAudioFromVideoActivity : BaseActivity(R.layout.activity_remove_audio
     override fun initialization() {
         binding = ActivityRemoveAudioFromVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.audio_remove_from_video)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnRemove.setOnClickListener(this)
     }

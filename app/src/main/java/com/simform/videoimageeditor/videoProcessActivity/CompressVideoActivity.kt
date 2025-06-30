@@ -5,12 +5,14 @@ import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.view.View
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityCompressVideoBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -25,6 +27,8 @@ class CompressVideoActivity : BaseActivity(R.layout.activity_compress_video, R.s
     override fun initialization() {
         binding = ActivityCompressVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.compress_a_video)
         
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnCompress.setOnClickListener(this)

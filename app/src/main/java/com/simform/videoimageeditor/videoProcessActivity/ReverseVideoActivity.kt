@@ -9,6 +9,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityReverseBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -22,7 +23,8 @@ class ReverseVideoActivity : BaseActivity(R.layout.activity_reverse, R.string.re
     override fun initialization() {
         binding = ActivityReverseBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.reverse_video)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnMotion.setOnClickListener(this)
     }
