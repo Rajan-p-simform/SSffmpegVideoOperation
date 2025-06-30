@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.jaiselrahman.filepicker.model.MediaFile
@@ -13,6 +14,7 @@ import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityCutVideoUsingTimeBinding
 import com.simform.videoimageeditor.ikovac.timepickerwithseconds.MyTimePickerDialog
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.TIME_FORMAT
@@ -36,6 +38,8 @@ class CutVideoUsingTimeActivity : BaseActivity(R.layout.activity_cut_video_using
     override fun initialization() {
         binding = ActivityCutVideoUsingTimeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.cut_video_using_time)
 
         binding.apply {
             btnVideoPath.setOnClickListener(this@CutVideoUsingTimeActivity)

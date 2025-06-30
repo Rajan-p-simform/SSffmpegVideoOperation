@@ -6,6 +6,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityExtractAudioBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -19,7 +20,8 @@ class ExtractAudioActivity : BaseActivity(R.layout.activity_extract_audio, R.str
     override fun initialization() {
         binding = ActivityExtractAudioBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.extract_audio)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnExtract.setOnClickListener(this)
     }

@@ -11,6 +11,7 @@ import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityCropAudioBinding
 import com.simform.videoimageeditor.ikovac.timepickerwithseconds.MyTimePickerDialog
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.stringForTime
@@ -31,7 +32,8 @@ class CropAudioActivity : BaseActivity(R.layout.activity_crop_audio, R.string.cr
     override fun initialization() {
         binding = ActivityCropAudioBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.crop_audio_using_time)
         binding.apply {
             btnAudioPath.setOnClickListener(this@CropAudioActivity)
             btnSelectStartTime.setOnClickListener(this@CropAudioActivity)

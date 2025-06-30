@@ -11,6 +11,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityCombineVideosBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -25,7 +26,8 @@ class CombineVideosActivity : BaseActivity(R.layout.activity_combine_videos, R.s
     override fun initialization() {
         binding = ActivityCombineVideosBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.merge_videos)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnCombine.setOnClickListener(this)
     }

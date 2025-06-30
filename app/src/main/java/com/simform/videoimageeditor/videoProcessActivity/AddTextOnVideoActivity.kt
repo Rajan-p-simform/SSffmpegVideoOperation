@@ -12,6 +12,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityAddTextOnVideoBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.getFileFromAssets
@@ -26,7 +27,8 @@ class AddTextOnVideoActivity : BaseActivity(R.layout.activity_add_text_on_video,
     override fun initialization() {
         binding = ActivityAddTextOnVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.add_text_on_video)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnAdd.setOnClickListener(this)
     }

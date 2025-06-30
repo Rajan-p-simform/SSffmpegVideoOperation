@@ -7,6 +7,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityFastAndSlowAudioBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -20,7 +21,8 @@ class FastAndSlowAudioActivity : BaseActivity(R.layout.activity_fast_and_slow_au
     override fun initialization() {
         binding = ActivityFastAndSlowAudioBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.fast_slow_motion_video)
         binding.btnAudioPath.setOnClickListener(this)
         binding.btnMotion.setOnClickListener(this)
     }
