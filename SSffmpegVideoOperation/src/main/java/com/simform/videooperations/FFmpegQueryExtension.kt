@@ -211,29 +211,18 @@ public class FFmpegQueryExtension {
             add("${width}x${height}")
             add("-r")
             add("${if (FRAME_RATE >= 10) FRAME_RATE - 5 else FRAME_RATE}")
-
-            // Use H.264 codec (better compression and compatibility)
             add("-vcodec")
-            add("libx264")
-
-            // Set reasonable video bitrate or use CRF instead
-            // add("-b:v")
-            // add("1000k") // You can control bitrate manually like this
-            add("-crf")
-            add("23")  // ✅ Lower = better quality (18–28 range). 23 is a good balance.
-
-            // Audio settings
+            add("mpeg4")
+            add("-b:v")
+            add("150k")
+            add("-b:a")
+            add("48000")
             add("-ac")
             add("2")
             add("-ar")
-            add("44100")
-            add("-b:a")
-            add("128k")
-
-            // Faster encoding, less file size control
+            add("22050")
             add("-preset")
-            add("ultrafast")  // Options: ultrafast, fast, medium, slow, etc.
-
+            add("ultrafast")
             add(outputVideo)
         }
         return inputs.toArray(arrayOfNulls<String>(inputs.size))
