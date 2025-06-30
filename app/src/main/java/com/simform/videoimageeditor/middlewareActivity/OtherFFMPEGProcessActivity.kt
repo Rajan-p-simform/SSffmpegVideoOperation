@@ -1,6 +1,7 @@
 package com.simform.videoimageeditor.middlewareActivity
 
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityOtherFfmpegProcessBinding
@@ -10,6 +11,7 @@ import com.simform.videoimageeditor.otherFFMPEGProcessActivity.CompressAudioActi
 import com.simform.videoimageeditor.otherFFMPEGProcessActivity.CropAudioActivity
 import com.simform.videoimageeditor.otherFFMPEGProcessActivity.FastAndSlowAudioActivity
 import com.simform.videoimageeditor.otherFFMPEGProcessActivity.MergeGIFActivity
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 
 class OtherFFMPEGProcessActivity : BaseActivity(R.layout.activity_other_ffmpeg_process, R.string.other_ffmpeg_operations) {
 
@@ -18,7 +20,8 @@ class OtherFFMPEGProcessActivity : BaseActivity(R.layout.activity_other_ffmpeg_p
     override fun initialization() {
         binding = ActivityOtherFfmpegProcessBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.title = getString(R.string.other_ffmpeg_operations)
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.other_ffmpeg_operations)
         binding.apply {
             btnMergeGIF.setOnClickListener(this@OtherFFMPEGProcessActivity)
             btnMergeAudios.setOnClickListener(this@OtherFFMPEGProcessActivity)

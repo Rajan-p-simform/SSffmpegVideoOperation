@@ -10,6 +10,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityImageToVideoConvertBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -25,7 +26,8 @@ class ImageToVideoConvertActivity : BaseActivity(R.layout.activity_image_to_vide
     override fun initialization() {
         binding = ActivityImageToVideoConvertBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.image_to_video)
         binding.btnImagePath.setOnClickListener(this)
         binding.btnConvert.setOnClickListener(this)
     }

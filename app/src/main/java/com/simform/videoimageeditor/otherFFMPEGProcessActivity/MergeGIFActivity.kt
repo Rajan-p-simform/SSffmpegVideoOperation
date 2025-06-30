@@ -24,6 +24,7 @@ import com.simform.videooperations.Paths
 import java.io.File
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 
 
 class MergeGIFActivity : BaseActivity(R.layout.activity_merge_gif, R.string.merge_gif) {
@@ -33,7 +34,8 @@ class MergeGIFActivity : BaseActivity(R.layout.activity_merge_gif, R.string.merg
     override fun initialization() {
         binding = ActivityMergeGifBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.merge_gif)
         binding.btnGifPath.setOnClickListener(this)
         binding.btnMerge.setOnClickListener(this)
     }

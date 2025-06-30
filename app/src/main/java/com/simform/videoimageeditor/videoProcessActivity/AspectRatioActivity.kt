@@ -10,6 +10,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityAspectRatioBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.RATIO_1
@@ -23,7 +24,8 @@ class AspectRatioActivity : BaseActivity(R.layout.activity_aspect_ratio, R.strin
     override fun initialization() {
         binding = ActivityAspectRatioBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.apply_aspect_ratio)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnAspectRatio.setOnClickListener(this)
     }

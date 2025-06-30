@@ -4,6 +4,7 @@ import android.view.View
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityVideoProcessBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videoimageeditor.videoProcessActivity.*
 
 /**
@@ -16,8 +17,8 @@ class VideoProcessActivity : BaseActivity(R.layout.activity_video_process, R.str
     override fun initialization() {
         binding = ActivityVideoProcessBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
-        supportActionBar?.title = getString(R.string.video_operations)
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.video_operations)
         binding.btnCutVideo.setOnClickListener(this)
         binding.btnImageToVideo.setOnClickListener(this)
         binding.btnAddWaterMarkOnVideo.setOnClickListener(this)

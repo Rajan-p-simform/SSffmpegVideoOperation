@@ -8,6 +8,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityCompressAudioBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.BITRATE_128
@@ -22,7 +23,8 @@ class CompressAudioActivity : BaseActivity(R.layout.activity_compress_audio, R.s
     override fun initialization() {
         binding = ActivityCompressAudioBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.compress_audio)
         binding.btnAudioPath.setOnClickListener(this)
         binding.btnChange.setOnClickListener(this)
     }

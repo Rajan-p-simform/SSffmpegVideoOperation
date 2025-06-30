@@ -10,6 +10,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityVideoRotateFlipBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.FFmpegCallBack
@@ -23,7 +24,8 @@ class VideoRotateFlipActivity : BaseActivity(R.layout.activity_video_rotate_flip
     override fun initialization() {
         binding = ActivityVideoRotateFlipBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.video_rotate)
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnRotate90.setOnClickListener(this)
         binding.btnRotate180.setOnClickListener(this)
