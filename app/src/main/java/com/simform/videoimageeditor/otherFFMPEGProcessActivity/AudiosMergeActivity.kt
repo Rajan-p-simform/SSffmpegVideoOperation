@@ -8,6 +8,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videoimageeditor.BaseActivity
 import com.simform.videoimageeditor.R
 import com.simform.videoimageeditor.databinding.ActivityAudiosMergeBinding
+import com.simform.videoimageeditor.utils.enableEdgeToEdge
 import com.simform.videooperations.CallBackOfQuery
 import com.simform.videooperations.Common
 import com.simform.videooperations.Common.DURATION_FIRST
@@ -22,7 +23,8 @@ class AudiosMergeActivity : BaseActivity(R.layout.activity_audios_merge, R.strin
     override fun initialization() {
         binding = ActivityAudiosMergeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+        enableEdgeToEdge(binding.toolbar.root)
+        binding.toolbar.textTitle.text = getString(R.string.merge_audios)
         binding.btnAudioPath.setOnClickListener(this)
         binding.btnMerge.setOnClickListener(this)
     }
