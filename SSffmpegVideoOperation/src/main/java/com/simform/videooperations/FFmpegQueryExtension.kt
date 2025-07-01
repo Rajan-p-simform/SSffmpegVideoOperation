@@ -116,7 +116,8 @@ public class FFmpegQueryExtension {
                 inputs.add(paths[i].filePath)
             }
         }
-
+        inputs.add("-vsync")
+        inputs.add("2")
         var query: String? = ""
         var queryAudio: String? = ""
         for (i in 0 until paths.size) {
