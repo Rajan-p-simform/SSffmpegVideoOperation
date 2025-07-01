@@ -62,20 +62,41 @@ public class FFmpegQueryExtension {
      * posX = X position of water-mark in percentage (1% to 100%)
      * posY = Y position of water-mark in percentage (1% to 100%)
      */
-    fun addVideoWaterMark(inputVideo: String, imageInput: String, posX: Float?, posY: Float?, output: String): Array<String> {
-        val inputs: ArrayList<String> = ArrayList()
-        inputs.apply {
-            add("-i")
-            add(inputVideo)
-            add("-i")
-            add(imageInput)
-            add("-filter_complex")
-            add("overlay=$posX:$posY")
-            add("-preset")
-            add("ultrafast")
-            add(output)
+    fun addVideoWaterMark(
+        inputVideo: String,
+        imageInput: String,
+        posX: Float?,           // Optional custom X coordinate
+        posY: Float?,           // Optional custom Y coordinate
+        output: String,
+        position: String?,      // e.g. "center", "fill", etc.
+    ): Array<String> {
+        val inputs = arrayListOf("-i", inputVideo, "-i", imageInput)
+
+        val filterComplex = when (position?.lowercase()) {
+            "fill" -> "[1:v][0:v]scale2ref=w=iw:h=ih[wm][base];[base][wm]overlay=0:0"
+            "crop" -> "[1:v][0:v]scale2ref=w='if(gt(a,iw/ih),iw,-1)':h='if(gt(a,iw/ih),-1,ih)'[wm][base];[base][wm]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2"
+            "center" -> "overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2"
+            "top-left" -> "overlay=0:0"
+            "top-right" -> "overlay=W-w:0"
+            "bottom-left" -> "overlay=0:H-h"
+            "bottom-right" -> "overlay=W-w:H-h"
+            else -> {
+                // Use custom x and y if provided, else default to 0
+                val x = posX?.toString() ?: "0"
+                val y = posY?.toString() ?: "0"
+                "overlay=$x:$y"
+            }
         }
-        return inputs.toArray(arrayOfNulls<String>(inputs.size))
+
+        inputs.addAll(
+            listOf(
+                "-filter_complex", filterComplex,
+                "-preset", "ultrafast",
+                "-y", // Overwrite output if exists
+                output
+            )
+        )
+        return inputs.toArray(arrayOfNulls(inputs.size))
     }
 
     fun addTextOnVideo(inputVideo: String, textInput: String, posX: Float?, posY: Float?, fontPath: String, isTextBackgroundDisplay: Boolean, fontSize: Int, fontcolor: String, output: String): Array<String> {
