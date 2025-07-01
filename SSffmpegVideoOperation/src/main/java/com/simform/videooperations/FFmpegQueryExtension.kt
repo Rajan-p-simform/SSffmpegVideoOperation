@@ -223,31 +223,35 @@ public class FFmpegQueryExtension {
     }
 
     fun compressor(inputVideo: String, width: Int?, height: Int?, outputVideo: String): Array<String> {
-        Common.getFrameRate(inputVideo)
-        val inputs: ArrayList<String> = ArrayList()
+        val inputs = ArrayList<String>()
+        val targetWidth = width ?: 720
+        val targetHeight = height ?: 1280
+
         inputs.apply {
             add("-y")
             add("-i")
             add(inputVideo)
-            add("-s")
-            add("${width}x${height}")
-            add("-r")
-            add("${if (FRAME_RATE >= 10) FRAME_RATE - 5 else FRAME_RATE}")
-            add("-vcodec")
-            add("mpeg4")
+            add("-vf")
+            add("scale=$targetWidth:$targetHeight")  // Resize to target dimensions
+            add("-c:v")
+            add("libx264")
             add("-b:v")
-            add("150k")
-            add("-b:a")
-            add("48000")
-            add("-ac")
-            add("2")
-            add("-ar")
-            add("22050")
+            add("600k") // Target video bitrate (adjust to make file smaller)
+            add("-maxrate")
+            add("700k") // Control peak bitrate
+            add("-bufsize")
+            add("1000k") // Smoothing buffer
             add("-preset")
-            add("ultrafast")
+            add("faster")
+            add("-c:a")
+            add("aac")
+            add("-b:a")
+            add("96k") // Lower audio bitrate
+            add("-movflags")
+            add("+faststart") // Optimize for streaming
             add(outputVideo)
         }
-        return inputs.toArray(arrayOfNulls<String>(inputs.size))
+        return inputs.toArray(arrayOfNulls(inputs.size))
     }
 
     fun extractImages(inputVideo: String, output: String, spaceOfFrame: Float): Array<String> {
