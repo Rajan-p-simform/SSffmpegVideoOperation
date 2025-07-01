@@ -5,6 +5,8 @@ import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,6 +36,21 @@ class AddWaterMarkOnVideoActivity : BaseActivity(R.layout.activity_add_water_mar
         binding.btnVideoPath.setOnClickListener(this)
         binding.btnImagePath.setOnClickListener(this)
         binding.btnAdd.setOnClickListener(this)
+        setUpSpinner()
+    }
+
+    private fun setUpSpinner() {
+        val positionOptions = listOf(
+            "custom",         // for x/y coordinates
+            "center",
+            "fill",
+            "crop",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+        )
+        binding.spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, positionOptions)
     }
 
     override fun onClick(v: View?) {
@@ -61,6 +78,10 @@ class AddWaterMarkOnVideoActivity : BaseActivity(R.layout.activity_add_water_mar
                     }
                     !isWaterMarkImageSelected -> {
                         Toast.makeText(this, getString(R.string.input_image_validate_message), Toast.LENGTH_SHORT).show()
+                    }
+                    binding.spinner.selectedItem.toString() != "custom" -> {
+                        processStart()
+                        addWaterMarkProcess()
                     }
                     TextUtils.isEmpty(binding.edtXPos.text.toString()) -> {
                         Toast.makeText(this, getString(R.string.x_position_validation), Toast.LENGTH_SHORT).show()
@@ -125,12 +146,26 @@ class AddWaterMarkOnVideoActivity : BaseActivity(R.layout.activity_add_water_mar
     private fun addWaterMarkProcess() {
         val outputPath = getFilePath(this, VIDEO)
         val xPos = width?.let {
-            (binding.edtXPos.text.toString().toFloat().times(it)).div(100)
+            if (binding.edtXPos.text.isEmpty()) null
+            else
+            (binding.edtXPos.text?.toString()?.toFloat()?.times(it))?.div(100)
         }
         val yPos = height?.let {
-            (binding.edtYPos.text.toString().toFloat().times(it)).div(100)
+            if (binding.edtYPos.text.isEmpty()) null
+            else
+            (binding.edtYPos.text?.toString()?.toFloat()?.times(it))?.div(100)
         }
-        val query = ffmpegQueryExtension.addVideoWaterMark(binding.tvInputPathVideo.text.toString(), binding.tvInputPathImage.text.toString(), xPos, yPos, outputPath)
+
+        val selectedPosition = binding.spinner.selectedItem.toString()
+
+        val query = ffmpegQueryExtension.addVideoWaterMark(
+            binding.tvInputPathVideo.text.toString(),
+            binding.tvInputPathImage.text.toString(),
+            position = if (selectedPosition == "custom") null else selectedPosition,
+            posX = if (selectedPosition == "custom") xPos else null,
+            posY = if (selectedPosition == "custom") yPos else null,
+            output = outputPath
+        )
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
                 binding.tvOutputPath.text = logMessage.text

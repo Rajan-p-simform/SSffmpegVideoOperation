@@ -105,6 +105,16 @@
         app:layout_constraintTop_toBottomOf="@+id/txtHintContain"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        app:layout_constraintTop_toBottomOf="@id/edtXPos"
+        app:layout_constraintStart_toStartOf="@id/edtXPos"
+        app:layout_constraintEnd_toEndOf="@id/edtYPos" />
+
     <Button
         android:id="@+id/btnAdd"
         android:layout_width="0dp"
@@ -114,7 +124,7 @@
         android:layout_margin="10dp"
         android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtYPos"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
