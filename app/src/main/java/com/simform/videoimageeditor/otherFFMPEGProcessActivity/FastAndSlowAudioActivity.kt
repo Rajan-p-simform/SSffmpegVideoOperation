@@ -61,7 +61,11 @@ class FastAndSlowAudioActivity : BaseActivity(R.layout.activity_fast_and_slow_au
         if (!binding.motionType.isChecked) {
             atempo = 0.5
         }
-        val query = ffmpegQueryExtension.audioMotion(binding.tvInputPathAudio.text.toString(), outputPath, atempo)
+        val query = ffmpegQueryExtension.audioMotion(
+            binding.tvInputPathAudio.text.toString(),
+            outputPath,
+            atempo
+        )
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
                 binding.tvOutputPath.text = logMessage.text
