@@ -60,7 +60,13 @@ class VideoFadeInFadeOutActivity : BaseActivity(R.layout.activity_video_fade_in_
 
     private fun fadeInFadeOutProcess() {
         val outputPath = Common.getFilePath(this, Common.VIDEO)
-        val query = ffmpegQueryExtension.videoFadeInFadeOut(binding.tvInputPathVideo.text.toString(), selectedVideoDurationInSecond, fadeInEndSeconds = 3, fadeOutStartSeconds = 3, output = outputPath)
+        val query = ffmpegQueryExtension.videoFadeInFadeOut(
+            binding.tvInputPathVideo.text.toString(),
+            selectedVideoDurationInSecond,
+            fadeInEndSeconds = 3,
+            fadeOutStartSeconds = 3,
+            output = outputPath
+        )
 
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
